@@ -25,22 +25,25 @@ const MapControls: React.FC = () => {
     <div className="absolute top-4 right-4 flex flex-col gap-2 z-[1000]">
       <button
         type="button"
+        data-testid="custom-zoom-in"
         onClick={handleZoomIn}
         className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 text-lg font-semibold shadow-md hover:bg-slate-800"
-        aria-label="Zoom in"
+        aria-label="Custom zoom in"
       >
         +
       </button>
       <button
         type="button"
+        data-testid="custom-zoom-out"
         onClick={handleZoomOut}
         className="w-9 h-9 flex items-center justify-center rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 text-lg font-semibold shadow-md hover:bg-slate-800"
-        aria-label="Zoom out"
+        aria-label="Custom zoom out"
       >
         −
       </button>
       <button
         type="button"
+        data-testid="custom-reset-view"
         onClick={handleResetView}
         className="mt-1 px-2 py-1 rounded-xl bg-slate-900/90 border border-slate-700 text-[10px] text-slate-200 shadow-md hover:bg-slate-800"
         aria-label="Reset view"
