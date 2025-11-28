@@ -1,5 +1,16 @@
+/* Leaflet map styles must be loaded before Tailwind */
 @import "leaflet/dist/leaflet.css";
 
+/* Tailwind layers */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Make the app take full height so the map can fill the screen */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}

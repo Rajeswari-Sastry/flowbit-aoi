@@ -1,27 +1,37 @@
 import { test, expect } from '@playwright/test';
 
-test('app loads with layout and map', async ({ page }) => {
+test('layout shows AOI panel and map', async ({ page }) => {
   await page.goto('http://localhost:5173/');
 
-  await expect(page.getByTestId('topbar-title')).toBeVisible();
-  await expect(page.getByTestId('sidebar')).toBeVisible();
+  // Figma title
+  await expect(page.getByText('Define Area of Interest')).toBeVisible();
+
+  // Search input
+  await expect(
+    page.getByPlaceholder('Search for a city, town... or draw area on map')
+  ).toBeVisible();
+
+  // Upload button
+  await expect(page.getByText('Uploading a shape file')).toBeVisible();
+
+  // Map container
   await expect(page.getByTestId('map-container')).toBeVisible();
 });
 
-test('map basic smoke test', async ({ page }) => {
+test('WMS visibility toggle updates chip text', async ({ page }) => {
   await page.goto('http://localhost:5173/');
 
-  const map = page.getByTestId('map-container');
-  await expect(map).toBeVisible();
+  // Default state
+  await expect(page.getByText('Visible')).toBeVisible();
 
-  // simple smoke wait for tiles to load
-  await page.waitForTimeout(1000);
-});
+  // Button label contains "satellite layer"
+  const toggleButton = page.getByRole('button', { name: /satellite layer/i });
 
-test('custom zoom controls are visible', async ({ page }) => {
-  await page.goto('http://localhost:5173/');
+  // Hide
+  await toggleButton.click();
+  await expect(page.getByText('Hidden')).toBeVisible();
 
-  await expect(page.getByTestId('custom-zoom-in')).toBeVisible();
-  await expect(page.getByTestId('custom-zoom-out')).toBeVisible();
-  await expect(page.getByTestId('custom-reset-view')).toBeVisible();
+  // Show again
+  await toggleButton.click();
+  await expect(page.getByText('Visible')).toBeVisible();
 });

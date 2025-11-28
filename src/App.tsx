@@ -5,14 +5,14 @@ import { MapView } from "./components/MapView";
 function App() {
   const [showWms, setShowWms] = useState(true);
 
-  const handleToggleWms = () => {
-    setShowWms((prev) => !prev);
-  };
+  const handleToggleWms = () => setShowWms((prev) => !prev);
 
   return (
-    <AppLayout showWms={showWms} onToggleWms={handleToggleWms}>
-      <MapView showWms={showWms} />
-    </AppLayout>
+    <div className="h-screen w-screen">
+      <AppLayout showWms={showWms} onToggleWms={handleToggleWms}>
+        <MapView showWms={showWms} />
+      </AppLayout>
+    </div>
   );
 }
 
