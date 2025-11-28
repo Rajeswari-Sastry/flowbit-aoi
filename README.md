@@ -49,32 +49,28 @@ Consistent spacing, fonts, colors, and responsiveness.
 Tests include layout visibility and map smoke tests.
 
 ### ✔ BONUS FEATURES  
-- **WMS Layer Toggle** (Layer Management UI in sidebar)  
-- **Custom Zoom + Reset Controls** on top of the map  
-- **Better Accessibility** through aria-labels  
-- **Improved sidebar structure ready for AOI tools**
+- **WMS Layer Toggle** (Layer Management UI)  
+- **Custom Zoom + Reset Controls**  
+- **Accessibility improvements through aria-labels**  
+- **Sidebar structured for AOI tools**
 
 ---
 
 # 🗺️ Map Library Choice
 
-### **Chosen:** **Leaflet + React-Leaflet**
+### **Chosen:** Leaflet + React-Leaflet
 
 ### Why Leaflet?
-- Direct and simple WMS layer support  
-- Lightweight and fast for a frontend-only assignment  
-- Clean integration with React  
-- Well-documented and reliable  
-- Easy to extend (drawing tools, custom controls, clustering)
+- Easiest WMS support  
+- Lightweight and fast  
+- Mature ecosystem  
+- Great React integration  
+- Simple to extend with custom controls  
 
-### Alternatives & Why Not Used
-| Library | Reason |
-|--------|--------|
-| **MapLibre** | Strong for vector tiles, but heavier and slower to configure for WMS. |
-| **OpenLayers** | Very powerful but has a steeper learning curve for quick UI implementation. |
-| **react-map-gl / Mapbox** | Best for vector maps; WMS is not first-class. Requires more glue code. |
-
-**Final choice:** Leaflet gave the best balance of simplicity, speed, and WMS support.
+### Alternatives Considered
+- **MapLibre** – better for vector tiles, heavier for WMS  
+- **OpenLayers** – powerful but too large for this scope  
+- **react-map-gl** – great for Mapbox, not ideal for WMS  
 
 ---
 
@@ -83,72 +79,56 @@ Tests include layout visibility and map smoke tests.
 ### Directory Structure
 ```
 src/
+ │
  ├─ components/
- │   ├─ MapView.tsx          → Map rendering + WMS + custom controls
- │   └─ layout/
- │        └─ AppLayout.tsx   → Topbar, sidebar, layout structure
- ├─ App.tsx                  → Wraps layout + map + state
- ├─ main.tsx                 → App entry
- └─ index.css                → Tailwind + Leaflet global styles
+ │    ├─ MapView.tsx
+ │    └─ layout/
+ │         └─ AppLayout.tsx
+ │
+ ├─ App.tsx
+ ├─ main.tsx
+ └─ index.css
 ```
 
 ### Component Breakdown
 
 #### **AppLayout**
-- Handles top navigation bar  
-- Handles left sidebar (AOI section + Layer Management section)  
-- Contains layout grid for map/content  
+Topbar, sidebar, and main content layout.
 
 #### **MapView**
-- Loads the Leaflet map
-- Shows base OSM layer
-- Loads or hides WMS layer depending on sidebar toggle  
-- Includes custom zoom in/out/reset controls placed over the map  
+Leaflet map, OSM base tile, WMS layer, custom zoom/reset controls.
 
 #### **App.tsx**
-- Central place for application state  
-- Manages `showWms` boolean for toggling satellite overlay  
-- Passes props into layout and map  
+Controls state: WMS layer visibility, passes props to layout + map.
 
 ---
 
 # ⚡ Performance Considerations
 
-### Scaling plan for handling 1000+ points/polygons:
-
-✔ **Marker/Polygon Clustering**  
-Use supercluster or Leaflet.markercluster to avoid DOM overload.
-
-✔ **Vector Tiles**  
-Convert large AOI datasets into Mapbox Vector Tiles (MVT) and load as vector layers.
-
-✔ **Lazy-loading by bounding box**  
-Load AOIs for the visible map extent only.
-
-✔ **Debounced map events**  
-Prevents excessive re-rendering on pan/zoom.
-
-✔ **Memoized components**  
-Use React.memo for heavy or repeated components.
-
-✔ **Tile caching**  
-Let the browser cache tiles & use ETag-based refresh.
+### Scaling plan for 1000+ AOIs  
+✔ Marker/polygon clustering  
+✔ Vector tiles (MVT)  
+✔ Lazy-loading by bounding box  
+✔ Debounced map events  
+✔ Caching tiles  
+✔ Memoized heavy UI components  
 
 ---
 
 # 🧪 Testing Strategy (Playwright)
 
-### What is covered
-1. Application loads successfully  
-2. Topbar, sidebar, and map container visible  
-3. Map smoke test to ensure Leaflet initialization  
+### What’s tested
+- Layout loads  
+- Sidebar visible  
+- Map container visible  
+- Smoke test for map  
 
-### What would be tested with more time
-- AOI tools  
-- Toggle features  
-- Search bar  
-- Accessibility interactions  
-- Sidebar state management  
+### With more time
+- Drawing AOIs  
+- Layer toggles  
+- Search  
+- Sidebar CRUD  
+- Keyboard accessibility  
 
 ---
 
@@ -201,7 +181,7 @@ test('map basic smoke test', async ({ page }) => {
   await page.goto('http://localhost:5173/');
   const map = page.getByTestId('map-container');
   await expect(map).toBeVisible();
-  await page.waitForTimeout(1000); // wait for tiles
+  await page.waitForTimeout(1000);
 });
 ```
 
@@ -209,37 +189,34 @@ test('map basic smoke test', async ({ page }) => {
 
 # 🎨 Bonus Features Implemented
 
-### ⭐ **1. WMS Layer Toggle (Layer Management UI)**  
-Allows hiding/showing the WMS satellite layer from the sidebar using a clean toggle button.
+### ⭐ WMS Layer Toggle  
+Sidebar button to hide/show WMS layer.
 
-### ⭐ **2. Custom Map Controls (Zoom + Reset)**  
-Custom-designed "+", "−", and "Reset" buttons floating on the map.  
-Fully integrated with Leaflet using `useMap`.
+### ⭐ Custom Map Controls  
+Zoom In, Zoom Out, Reset View.
 
-### ⭐ **3. Accessibility Improvements**  
-Custom controls include `aria-label` attributes.
-
-These additions improve usability and hit multiple bonus categories.
+### ⭐ Accessibility Enhancements  
+ARIA labels added.
 
 ---
 
-# 🔧 Tradeoffs Made
+# 🔧 Tradeoffs
 
-- AOI tools not added due to time constraints  
+- AOI drawing tools not added due to time  
+- Sidebar shows placeholders  
 - Base map kept simple for clarity  
-- Sidebar includes placeholders instead of full AOI CRUD  
 
 ---
 
-# 🛠 Production Readiness Improvements (Future Work)
+# 🛠 Production Readiness (Future Work)
 
-- AOI creation tools (point/polygon drawing)  
-- Search bar with Nominatim  
-- Offline caching  
-- Global error boundaries  
-- ESLint + Prettier + Husky hooks  
-- Docker deployment  
-- Keyboard navigation support  
+- AOI drawing (points/polygons)  
+- Search bar (Nominatim)  
+- Tile caching  
+- Better error handling  
+- ESLint + Prettier  
+- Docker support  
+- CI pipelines  
 
 ---
 
@@ -252,21 +229,13 @@ These additions improve usability and hit multiple bonus categories.
 | Layout + UI | 1.5 hr |
 | Bonus features | 40 min |
 | Playwright tests | 30 min |
-| README + polish | 45 min |
+| README + final touches | 45 min |
 | **Total** | **~5 hours+** |
 
 ---
 
-# 🎥 Demo Video
+# 🎥 Demo Video  
+https://drive.google.com/file/d/1HZZt10gZWrnsr5uvIXEPVqvj-ehOclK_/view?usp=drive_link
 
-
-
----
-
-# 📂 GitHub Repository
-
-
-
----
-
-# ✔ End of README
+# 📂 GitHub Repository  
+https://github.com/Rajeswari-Sastry/flowbit-aoi
